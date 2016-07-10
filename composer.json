@@ -3,6 +3,7 @@
     "description": "Command-line tool for managing your local web development projects on Windows.",
     "type": "project",
     "require": {
+        "php": "^5.4.0 || ^7.0",
         "symfony/console": "^3.1"
     },
     "license": "MIT",
