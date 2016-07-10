@@ -1,6 +1,6 @@
 {
     "name": "afflicto/webdev",
-    "description": "Command-line tool for managing your local web development projects on Windows.",
+    "description": "Command-line tool for managing your local web development projects on Windows with Wamp.",
     "type": "project",
     "require": {
         "php": "^5.4.0 || ^7.0",
