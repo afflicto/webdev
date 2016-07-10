@@ -201,6 +201,11 @@ class Webdev
 		}
 	}
 
+	/**
+	 * @param string $project
+	 * @param string|null $provider provider to use or null to use default
+	 * @return string|null the name of the new database or null if it failed.
+	 */
 	public function createDatabase($project, $provider = null)
 	{
 		# get the provider & credentials
@@ -209,10 +214,14 @@ class Webdev
 
 		if ($provider == 'mysql') {
 			$pdo = new \PDO('mysql:host=' .$credentials['host'], $credentials['username'], $credentials['password']);
-			return ($pdo->exec("CREATE DATABASE `$project`;") > 0) ? $project : false;
+			if ($pdo->exec("CREATE DATABASE `$project`;") > 0) {
+				return $project;
+			}
 		}else if ($provider == 'sqlite') {
 			#$pdo = new \PDO('sqlite');
 		}
+
+		return null;
 	}
 
 	public function addHostsFile($project, $subdomains = ['www'])

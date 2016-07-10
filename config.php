@@ -9,6 +9,11 @@
       'wamp' => 
       array (
         'web_root' => 'F:/wamp64/www',
+        'virtualhosts' => 
+        array (
+          'enabled' => false,
+          'file' => 'F:\\wamp64\\bin\\apache\\apache2.4.17\\conf\\extra\\httpd-vhosts.conf',
+        ),
       ),
     ),
   ),
@@ -30,7 +35,7 @@
     array (
       'mysql' => 
       array (
-        'host' => '127.0.0.1',
+        'host' => 'localhost',
         'username' => 'root',
         'password' => 'kake',
       ),
@@ -38,29 +43,5 @@
   ),
   'projects' => 
   array (
-    'example-project' => 
-    array (
-      'name' => 'example-project',
-      'documents' => 'F:/Projects/example-project',
-      'web' => 'F:/wamp64/www/example-project',
-      'database' => 'example-project',
-      'hosts' => 
-      array (
-        0 => 'example-project.dev',
-        1 => 'www.example-project.dev',
-      ),
-    ),
-    'my-new-site' => 
-    array (
-      'name' => 'my-new-site',
-      'documents' => 'F:/Projects/my-new-site',
-      'web' => 'F:/wamp64/www/my-new-site',
-      'database' => 'my-new-site',
-      'hosts' => 
-      array (
-        0 => 'my-new-site.dev',
-        1 => 'www.my-new-site.dev',
-      ),
-    ),
   ),
 );

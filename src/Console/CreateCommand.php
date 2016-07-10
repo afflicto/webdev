@@ -66,7 +66,7 @@ class CreateCommand extends Command
 
 					$vhost_dir = rtrim($project['web'] .'/' .$vhost_dir, '/');
 
-					$web['virtualhost'] = $wd->createVirtualhostDirective($name, $vhost_dir);
+					$web['virtualhost'] = $wd->createVirtualhostDirective($file, $name, $vhost_dir);
 				}
 			}
 		}
