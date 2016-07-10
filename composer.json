@@ -1,0 +1,24 @@
+{
+    "name": "afflicto/webdev",
+    "description": "Command-line tool for managing your local web development projects on Windows.",
+    "type": "project",
+    "require": {
+        "symfony/console": "^3.1"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Petter Thowsen",
+            "email": "petter@gentlefox.net"
+        }
+    ],
+    "minimum-stability": "stable",
+    "autoload": {
+      "psr-4": {
+        "Afflicto\\Webdev\\": "src/"
+      }
+    },
+    "bin": [
+      "envoy"
+    ]
+}
