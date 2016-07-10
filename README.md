@@ -14,6 +14,8 @@ Imagine typing a single command like and having the following done in millisecon
 ## Changelog
 - Now generates virtualhost directives for WAMP.
 
+[here's how it looks to both set it up and create your first site](http://g.recordit.co/iwrvlz7Hi1.gif)
+
 ## Requirements
 - [Composer](http://getcomposer.org)
 - Your composer vendor directory in your PATH
