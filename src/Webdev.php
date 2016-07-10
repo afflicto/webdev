@@ -17,6 +17,9 @@ use Symfony\Component\Console\Input\ArrayInput;
 class Webdev
 {
 
+	const OS_WINDOWS = 0;
+	const OS_UNIX = 1;
+
 	/**
 	 * @var Webdev|null
 	 */
@@ -78,6 +81,9 @@ class Webdev
 
 	private function __construct() {}
 
+	/**
+	 * @throws Exception
+	 */
 	public function run()
 	{
 		# we leverage the Illuminate/Config part of Laravel for managing our simple config!
@@ -105,6 +111,20 @@ class Webdev
 		}
 	}
 
+	public function getOS()
+	{
+		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
+			return static::OS_WINDOWS;
+		else
+			return static::OS_UNIX;
+	}
+
+	/**
+	 * @param string $project
+	 * @param string|null $webServer override webserver
+	 * @return string path to the new directory
+	 * @throws Exception
+	 */
 	public function createWebDirectory($project, $webServer = null)
 	{
 		if ($webServer == null) $webServer = $this->config->get('web.default');
@@ -119,12 +139,54 @@ class Webdev
 		}
 	}
 
+	/**
+	 * @param string $file the virtualhosts.conf file
+	 * @param string $name project name
+	 * @param string $directory directory of the web root
+	 * @return string the virtualhost code generated
+	 * @throws Exception if the virtualhosts.conf file is missing.
+	 */
+	public function createVirtualhostDirective($file, $name, $directory)
+	{
+		if ( ! file_exists($file)) {
+			throw new Exception("The virtualhosts file '" .$file . "' is missing!");
+		}
+
+		$str = "\n\n---- begin webdev ----\n";
+
+		$str .= "<VirtualHost *:80>\n";
+
+		$str .= "\tServerAdmin webmaster@$name.dev\n";
+
+		$str .= "\tDocumentRoot \"$directory\"\n";
+
+		$str .= "\tServerName $name.dev\n";
+		$str .= "\tServerAlias www.$name.dev\n";
+
+		$str .= "\t<Directory \"$directory\">\n";
+
+		$str .= "\t\tAllowOverride all\n";
+		$str .= "\t\tRequire all granted\n";
+
+		$str .= "\t</Directory>\n";
+
+		$str .= "</VirtualHost>\n";
+
+		$str .= "---- end webdev ----";
+
+		$h = fopen($file, 'a');
+		fwrite($h, $str);
+		fclose($h);
+
+		return $str;
+	}
+
 	public function createDocumentsDirectory($project)
 	{
 		$docRoot = $this->config->get('documents.root');
 
 		if ( ! is_dir($docRoot)) {
-			throw new \Exception('The documents root doesn\'t exist! ("' .$docRoot .'")!');
+			throw new \Exception('The documents root does not exist! ("' .$docRoot .'")!');
 		}
 
 		if (mkdir($docRoot .'/' .$project, 0755)) {
@@ -177,5 +239,5 @@ class Webdev
 		fwrite($h, "<?php\n return " .var_export($this->config->all(), true) .';');
 		fclose($h);
 	}
-	
+
 }

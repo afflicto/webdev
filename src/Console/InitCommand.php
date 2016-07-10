@@ -51,6 +51,25 @@ class InitCommand extends Command
 
 		$this->config->set('web.default', $provider);
 
+		if ($provider == 'wamp' || $provider == 'apache') {
+			$virtualhosts_enabled = false;
+
+			if ($this->confirm('Would you like me to manage virtualhost directives for your projects?')) {
+				$virtualhosts_enabled = true;
+			}
+
+			$this->config->set('web.providers.' .$provider .'.virtualhosts.enabled', $virtualhosts_enabled);
+
+
+			if ($provider == 'wamp') {
+				$virtualhosts_file = $this->ask("Where is your virtualhosts file located?\n-> ", null);
+
+				$this->config->set('web.providers.' .$provider .'.virtualhosts.file', $virtualhosts_file);
+			}else if ($provider == 'apache') {
+				$this->out->writeln("I don't know how to manage virtualhosts for apache under unix-like OS'es yet.");
+			}
+		}
+
 		if ($this->ask("<question>Would you like to define another web server?(y/n)</question>", 'n') == 'y') {
 			return $this->addWebServer();
 		}else {
@@ -121,7 +140,8 @@ class InitCommand extends Command
 		//hosts file
 		if ($this->ask("Shall I manage the 'hosts' file on your system? For mapping 'newproject.dev' to 127.0.0.1 etc. (y/n)\n-> ", 'n') == 'y') {
 			$config->set('hosts.enabled', true);
-			if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+			
+			if ($this->wd->getOS() == Webdev::OS_WINDOWS) {
 				$hosts_file = 'C:/Windows/System32/drivers/etc/hosts';
 			}else {
 				$hosts_file = '/etc/hosts';
@@ -132,10 +152,6 @@ class InitCommand extends Command
 			}
 
 			$config->set('hosts.file', $hosts_file);
-
-			#$h = fopen($hosts_file, 'a');
-			#fwrite($h, "\n\r;---------begin webdev---------\n");
-			#fwrite($h, "\n\r;----------end webdev----------\n");
 		}
 
 		//database

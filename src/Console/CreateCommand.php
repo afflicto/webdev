@@ -31,6 +31,7 @@ class CreateCommand extends Command
 			'name' => $name,
 			'documents' => null,
 			'web' => null,
+			'virtualhost' => null,
 			'database' => null,
 			'hosts' => [],
 		];
@@ -41,6 +42,33 @@ class CreateCommand extends Command
 
 		if ($config->get('web.enabled')) {
 			$project['web'] = $wd->createWebDirectory($name);
+
+			# is it a wamp web server?
+			if ($config->get('web.default') == 'wamp') {
+
+				# is virtualhosts managed?
+				if ($config->get('web.providers.wamp.virtualhosts.enabled')) {
+					$file = $config->get('web.providers.wamp.virtualhosts.file');
+					$output->writeln('Generating wamp virtualhost directive in "' .$file .'"...');
+
+					$choice = $this->choice("<question>Should wamp serve the web root of your project, or a sub-directory like 'public'?.</question>\n",
+						[
+							'It should serve the project web root (' .$project['web'] .').',
+							'A sub-directory of my choosing.',
+						]
+					);
+
+					if ($choice == 'A sub-directory of my choosing.') {
+						$vhost_dir = $this->ask("Tell me the name of the sub-directory (default is 'public')\n-> ", 'public');
+					}else {
+						$vhost_dir = '';
+					}
+
+					$vhost_dir = rtrim($project['web'] .'/' .$vhost_dir, '/');
+
+					$web['virtualhost'] = $wd->createVirtualhostDirective($name, $vhost_dir);
+				}
+			}
 		}
 
 		if ($config->get('database.enabled')) {
@@ -54,8 +82,15 @@ class CreateCommand extends Command
 		# add the project
 		$config->set('projects.' .$name, $project);
 
-		# save config
-		$wd->save();
+		$output->writeln("Your project looks like this:");
+		$output->writeln($project .' => ' .var_export($project, true));
+
+		if ($this->io->confirm('Does it look ok?', true)) {
+			# save config
+			$wd->save();
+
+			$output->writeln('Done!');
+		}
 	}
 
 }

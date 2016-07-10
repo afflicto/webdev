@@ -7,17 +7,31 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 class Command extends \Symfony\Component\Console\Command\Command
 {
+	/**
+	 * @var InputInterface
+	 */
 	private $in;
+
+	/**
+	 * @var OutputInterface
+	 */
 	private $out;
+
+	/**
+	 * @var SymfonyStyle
+	 */
+	protected $io;
 
 	protected function initialize(InputInterface $input, OutputInterface $output)
 	{
 		parent::initialize($input, $output);
 		$this->in = $input;
 		$this->out = $output;
+		$this->io = new SymfonyStyle($this->in, $this->out);
 	}
 
 	public function ask($question, $default = null)
@@ -44,6 +58,11 @@ class Command extends \Symfony\Component\Console\Command\Command
 		if ($errorMessage !== null) $question->setErrorMessage($errorMessage);
 
 		return $q->ask($this->in, $this->out, $question);
+	}
+
+	public function confirm($text)
+	{
+
 	}
 
 }

@@ -50,5 +50,17 @@
         1 => 'www.example-project.dev',
       ),
     ),
+    'my-new-site' => 
+    array (
+      'name' => 'my-new-site',
+      'documents' => 'F:/Projects/my-new-site',
+      'web' => 'F:/wamp64/www/my-new-site',
+      'database' => 'my-new-site',
+      'hosts' => 
+      array (
+        0 => 'my-new-site.dev',
+        1 => 'www.my-new-site.dev',
+      ),
+    ),
   ),
 );

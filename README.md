@@ -9,7 +9,10 @@ Imagine typing a single command like and having the following done in millisecon
 4.  - `127.0.0.1 new-site.dev`
 5.  - `127.0.0.1 www.new-site.dev`
 6.  Creates a database on your MySQL Server
-7.  Perhaps creates a folder in your documents `/home/John/Dropbox/Projects/new-site`.
+7.  Perhaps creates a folder for your non-code stuff `/home/John/Dropbox/Projects/new-site`.
+
+## Changelog
+- Now generates virtualhost directives for WAMP.
 
 ## Requirements
 - [Composer](http://getcomposer.org)
