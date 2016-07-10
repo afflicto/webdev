@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-echo 'the current directory is ' __DIR__ ."\n";
+echo 'the current directory is ' .__DIR__ ."\n";
 die;
 touch(__DIR__ .'/config.php');
 
