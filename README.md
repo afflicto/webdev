@@ -11,7 +11,7 @@ Imagine typing a single command like and having the following done in millisecon
 6.  Creates a database on your MySQL Server
 7.  Perhaps creates a folder in your documents `/home/John/Dropbox/Projects/new-site`.
 
-[here's how it looks to both set it up and create your first site](https://t.co/6ObznlUGhD)
+[here's how it looks to both set it up and create your first site](http://g.recordit.co/iwrvlz7Hi1.gif)
 
 ## Requirements
 - [Composer](http://getcomposer.org)
