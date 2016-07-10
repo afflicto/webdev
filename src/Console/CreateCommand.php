@@ -83,7 +83,7 @@ class CreateCommand extends Command
 		$config->set('projects.' .$name, $project);
 
 		$output->writeln("Your project looks like this:");
-		$output->writeln($project .' => ' .var_export($project, true));
+		$output->writeln($name .' => ' .var_export($project, true));
 
 		if ($this->io->confirm('Does it look ok?', true)) {
 			# save config

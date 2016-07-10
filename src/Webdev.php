@@ -181,6 +181,11 @@ class Webdev
 		return $str;
 	}
 
+	/**
+	 * @param string $project name of the project
+	 * @return string the new directory
+	 * @throws Exception if the documents.root is not set.
+	 */
 	public function createDocumentsDirectory($project)
 	{
 		$docRoot = $this->config->get('documents.root');
@@ -189,8 +194,10 @@ class Webdev
 			throw new \Exception('The documents root does not exist! ("' .$docRoot .'")!');
 		}
 
-		if (mkdir($docRoot .'/' .$project, 0755)) {
-			return $docRoot .'/' .$project;
+		$docFolder = $docRoot .'/' .$project;
+
+		if (is_dir($docFolder) || mkdir($docFolder, 0755)) {
+			return $docFolder;
 		}
 	}
 
