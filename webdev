@@ -1,6 +1,10 @@
 #!/usr/bin/env php
 <?php
 
+echo 'the current directory is ' __DIR__ ."\n";
+die;
+touch(__DIR__ .'/config.php');
+
 if (file_exists(__DIR__.'/vendor/autoload.php')) {
 	require __DIR__.'/vendor/autoload.php';
 } else {
