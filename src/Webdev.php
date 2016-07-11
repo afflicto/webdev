@@ -163,7 +163,7 @@ class Webdev
 			throw new Exception("The virtualhosts file '" .$file . "' is missing!");
 		}
 
-		$str = "\n\n---- begin webdev ----\n";
+		$str = "\n\n#---- begin webdev ----\n";
 
 		$str .= "<VirtualHost *:80>\n";
 
@@ -183,7 +183,7 @@ class Webdev
 
 		$str .= "</VirtualHost>\n";
 
-		$str .= "---- end webdev ----";
+		$str .= "#---- end webdev ----";
 
 		$h = fopen($file, 'a');
 		fwrite($h, $str);
