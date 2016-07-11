@@ -60,9 +60,14 @@ class Command extends \Symfony\Component\Console\Command\Command
 		return $q->ask($this->in, $this->out, $question);
 	}
 
-	public function confirm($text)
+	/**
+	 * @param string $question
+	 * @param bool|null $default
+	 * @return bool|string
+	 */
+	public function confirm($question, $default = true)
 	{
-
+		return $this->io->confirm($question, $default);
 	}
 
 }

@@ -37,12 +37,17 @@ The first time you run it, it should automatically do the `init` command, which 
 | [abc?] | Optional argument
 
 ##### webdev config [key] [value?]
+Configure webdev by getting or setting values.
 
 Examples:
 - `webdev config web.providers.wamp.web_root C:/wamp/www` sets the web root directory where your new projects will be created when using the "apache" web server.
 - `webdev config database.default` tells you the current value of the default database provider.
 - `webdev config web` prints the value of all the keys and values in that array (If it is an array. In this case, it is).
 - `webdev config mysql.username "root"` sets the mysql username
+
+##### webdev create
+Create a new website
+
 
 ## About & Contributing
 It's written in PHP, built on Composer and leverages Symfony/Console as well as Illuminate/Config.

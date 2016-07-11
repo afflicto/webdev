@@ -5,6 +5,7 @@ namespace Afflicto\Webdev\Console;
 use Afflicto\Webdev\Webdev;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class CreateCommand extends Command
@@ -15,11 +16,13 @@ class CreateCommand extends Command
 		$this
 			->setName('create')
 			->setDescription('Create a new Project.')
-			->addArgument('name', InputArgument::REQUIRED, 'Project name, lowercase snake_case is recommended as it will be the directory and domain name.');
+			->addArgument('name', InputArgument::REQUIRED, 'Project name, lowercase snake_case is recommended as it will be the directory and domain name.')
+			->addOption('no-db', null, InputOption::VALUE_NONE, "Don't create a database.'");
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
+
 		$wd = Webdev::getInstance();
 		$config = $wd->config;
 
@@ -31,7 +34,6 @@ class CreateCommand extends Command
 			'name' => $name,
 			'documents' => null,
 			'web' => null,
-			'virtualhost' => null,
 			'database' => null,
 			'hosts' => [],
 		];
@@ -69,12 +71,31 @@ class CreateCommand extends Command
 					$web['virtualhost'] = $wd->createVirtualhostDirective($file, $name, $vhost_dir);
 				}
 			}
+
+			# 'git init'?
+			if ($config->get('git')) {
+				if ($this->ask("Run 'git init' in '" .$project['web'] ."'? (y/n)\n-> ", 'no')) {
+					$output->writeln('Ok.');
+
+					$cwd = getcwd();
+
+					# go run git init
+					chdir($project['web']);
+					shell_exec('git init');
+
+					chdir($cwd);
+
+					$output->writeln('Git initialized!');
+				}
+			}
 		}
 
-		if ($config->get('database.enabled')) {
+		# create datbase
+		if ($config->get('database.enabled') && $input->getOption('no-db') == false) {
 			$project['database'] = $wd->createDatabase($name);
 		}
-		
+
+		# add hosts
 		if ($config->get('hosts.enabled')) {
 			$project['hosts'] = $wd->addHostsFile($name);
 		}
@@ -82,15 +103,12 @@ class CreateCommand extends Command
 		# add the project
 		$config->set('projects.' .$name, $project);
 
-		$output->writeln("Your project looks like this:");
+		# save config
+		$wd->save();
+
+		# done
+		$output->writeln("Done! Generated Project:");
 		$output->writeln($name .' => ' .var_export($project, true));
-
-		if ($this->io->confirm('Does it look ok?', true)) {
-			# save config
-			$wd->save();
-
-			$output->writeln('Done!');
-		}
 	}
 
 }

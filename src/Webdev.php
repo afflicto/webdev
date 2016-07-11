@@ -41,28 +41,35 @@ class Webdev
 	 * @var array
 	 */
 	public $defaultConfiguration = [
+		# if the users uses git, we can automatically run 'git init' when creating a new web project.
+		'git' => false,
+
 		# Web Server config (currently apache only)
 		'web' => [
 			'enabled' => false,
 			'default' => 'apache',
 			'providers' => [],
 		],
+
 		# documents config
 		'documents' => [
 			'enabled' => false,
 			'root' => 'C:/Users/Someone/My Documents/Projects',
 		],
+
 		# hosts file config
 		'hosts' => [
 			'enabled' => false,
 			'file' => 'C:/Windows/System32/drivers/etc/hosts',
 		],
+
 		# database config
 		'database' => [
 			'enabled' => false,
 			'default' => 'mysql',
 			'providers' => []
 		],
+
 		# the projects that Webdev manages
 		'projects' => [
 
@@ -122,7 +129,7 @@ class Webdev
 	/**
 	 * @param string $project
 	 * @param string|null $webServer override webserver
-	 * @return string path to the new directory
+	 * @return string|null path to the new directory or null if it failed
 	 * @throws Exception
 	 */
 	public function createWebDirectory($project, $webServer = null)
@@ -134,9 +141,13 @@ class Webdev
 			throw new \Exception('The web root "' .$root .'" does not exist for the ' .$webServer .' Web Server Provider!');
 		}
 
-		if (mkdir($root .'/' .$project, 0775)) {
-			return $root .'/' .$project;
+		$folder = $root .'/' .$project;
+
+		if (is_dir($folder) || mkdir($folder, 0775)) {
+			return $folder;
 		}
+
+		return null;
 	}
 
 	/**
@@ -214,7 +225,7 @@ class Webdev
 
 		if ($provider == 'mysql') {
 			$pdo = new \PDO('mysql:host=' .$credentials['host'], $credentials['username'], $credentials['password']);
-			if ($pdo->exec("CREATE DATABASE `$project`;") > 0) {
+			if ($pdo->exec("CREATE DATABASE `$project`;") !== false) {
 				return $project;
 			}
 		}else if ($provider == 'sqlite') {

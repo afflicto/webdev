@@ -11,8 +11,8 @@
         'web_root' => 'F:/wamp64/www',
         'virtualhosts' => 
         array (
-          'enabled' => false,
-          'file' => 'F:\\wamp64\\bin\\apache\\apache2.4.17\\conf\\extra\\httpd-vhosts.conf',
+          'enabled' => true,
+          'file' => 'F:/wamp64/bin/apache/apache2.4.17/conf/extra/httpd-vhosts.conf',
         ),
       ),
     ),
@@ -43,5 +43,18 @@
   ),
   'projects' => 
   array (
+    'mynewsite' => 
+    array (
+      'name' => 'mynewsite',
+      'documents' => 'F:/Projects/mynewsite',
+      'web' => 'F:/wamp64/www/mynewsite',
+      'database' => 'mynewsite',
+      'hosts' => 
+      array (
+        0 => 'mynewsite.dev',
+        1 => 'www.mynewsite.dev',
+      ),
+    ),
   ),
+  'git' => true,
 );
