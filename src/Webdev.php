@@ -2,6 +2,7 @@
 
 namespace Afflicto\Webdev;
 
+use Afflicto\Webdev\Console\AddCommand;
 use Afflicto\Webdev\Console\ConfigCommand;
 use Afflicto\Webdev\Console\CreateCommand;
 use Afflicto\Webdev\Console\InitCommand;
@@ -113,6 +114,7 @@ class Webdev
 			$this->console->add(new InitCommand);
 			$this->console->add(new ConfigCommand);
 			$this->console->add(new CreateCommand);
+			$this->console->add(new AddCommand);
 
 			$this->console->run();
 		}
@@ -128,23 +130,23 @@ class Webdev
 
 	/**
 	 * @param string $project
-	 * @param string|null $webServer override webserver
-	 * @return string|null path to the new directory or null if it failed
+	 * @param string|null $webProvider override webserver
+	 * @return array|null ['provider' => $provider, 'root' => directory]
 	 * @throws Exception
 	 */
-	public function createWebDirectory($project, $webServer = null)
+	public function createWebDirectory($project, $webProvider = null)
 	{
-		if ($webServer == null) $webServer = $this->config->get('web.default');
-		$root = $this->config->get('web.providers.' .$webServer .'.web_root');
+		if ($webProvider == null) $webProvider = $this->config->get('web.default');
+		$root = $this->config->get('web.providers.' .$webProvider .'.web_root');
 
 		if (! is_dir($root)) {
-			throw new \Exception('The web root "' .$root .'" does not exist for the ' .$webServer .' Web Server Provider!');
+			throw new \Exception('The web root "' .$root .'" does not exist for the ' .$webProvider .' Web Server Provider!');
 		}
 
 		$folder = $root .'/' .$project;
 
 		if (is_dir($folder) || mkdir($folder, 0775)) {
-			return $folder;
+			return ['provider' => $webProvider, 'root' => $folder];
 		}
 
 		return null;
@@ -215,7 +217,7 @@ class Webdev
 	/**
 	 * @param string $project
 	 * @param string|null $provider provider to use or null to use default
-	 * @return string|null the name of the new database or null if it failed.
+	 * @return array ['provider' => $provider, 'name' => $name]
 	 */
 	public function createDatabase($project, $provider = null)
 	{
@@ -226,7 +228,7 @@ class Webdev
 		if ($provider == 'mysql') {
 			$pdo = new \PDO('mysql:host=' .$credentials['host'], $credentials['username'], $credentials['password']);
 			if ($pdo->exec("CREATE DATABASE `$project`;") !== false) {
-				return $project;
+				return ['provider' => $provider, 'name' => $project];
 			}
 		}else if ($provider == 'sqlite') {
 			#$pdo = new \PDO('sqlite');
