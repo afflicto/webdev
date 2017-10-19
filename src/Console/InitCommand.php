@@ -1,8 +1,8 @@
 <?php
 
-namespace Afflicto\Webdev\Console;
+namespace Arakash\Webdev\Console;
 
-use Afflicto\Webdev\Webdev;
+use Arakash\Webdev\Webdev;
 use Illuminate\Config\Repository;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -66,24 +66,45 @@ class InitCommand extends Command
 
 		$this->config->set('web.default', $provider);
 
-		if ($provider == 'wamp' || $provider == 'apache') {
-			$virtualhosts_enabled = false;
+        # WAMP
+        if ($provider == 'wamp') {
+            # enable virtualhosts?
+            $vhostsEnabled = $this->confirm('Shall I manage the wamp virtualhosts for you?');
+            $this->config->set('web.providers.wamp.virtualhosts.enabled', $vhostsEnabled);
 
-			if ($this->confirm("Would you like me to manage virtualhost directives for your projects? (y/n)\n-> ")) {
-				$virtualhosts_enabled = true;
-			}
+            if ($vhostsEnabled) {
+                $virtualhosts_file = $this->ask("Where is your virtualhosts file located?\n-> ", null);
+                $virtualhosts_file = str_replace('\\', '/', $virtualhosts_file);
+                $this->config->set('web.providers.wamp.virtualhosts.file', $virtualhosts_file);
+            }
+        }
 
-			# enable virtualhosts
-			$this->config->set('web.providers.' .$provider .'.virtualhosts.enabled', $virtualhosts_enabled);
+        # APACHE
+        if ($provider == 'apache') {
+            $this->config->set('web.providers.apache.manage_sites', false);
 
-			if ($provider == 'wamp') {
-				$virtualhosts_file = $this->ask("Where is your virtualhosts file located?\n-> ", null);
-				$virtualhosts_file = str_replace('\\', '/', $virtualhosts_file);
-				$this->config->set('web.providers.' .$provider .'.virtualhosts.file', $virtualhosts_file);
-			}else if ($provider == 'apache') {
-				$this->out->writeln("I don't know how to manage virtualhosts for apache under unix-like OS'es yet.");
-			}
-		}
+            if ($this->confirm('Would you like me to manage your apache sites? (virtualhosts)')) {
+                $this->config->set('web.providers.apache.manage_sites', true);
+                $paths = [
+                    'sites-available' => '/etc/apache2/sites-available',
+                    'sites-enabled' => '/etc/apache2/sites-enabled',
+                ];
+
+                if ( ! $this->confirm("Is '" .$paths['sites-available'] ."' your sites-available directory? (y/n)\n-> ")) {
+                    $paths['sites-available'] = $this->ask("What's the path to your sites-available directory?");
+                }
+
+                if ( ! $this->confirm("Is '" .$paths['sites-enabled'] ."' your sites-enabled directory? (y/n)\n-> ")) {
+                    $paths['sites-enabled'] = $this->ask("What's the path to your sites-enabled directory?");
+                }
+
+                $this->config->set('web.providers.apache.paths', $paths);
+            }
+
+            $reloadCommand = $this->ask("What's the command for reloading the apache service? (defaults to 'service apache2 restart')\n ->", "service apache2 reload");
+            $this->config->set('web.providers.apache.reloadCommand', $reloadCommand);
+            $this->out->writeln('Ok!');
+        }
 
 		if ($this->ask("Would you like to define another web server?(y/n)", 'n') == 'y') {
 			return $this->addWebServer();
@@ -147,7 +168,7 @@ class InitCommand extends Command
 		}
 
 		//documents
-		if ($this->ask("Do you also tend to create a separate folder somewhere else for things like documents, graphics and other resources? (y/n)\n-> ", 'n') == 'y') {
+		if ($this->confirm("Do you also tend to create a separate folder somewhere else for things like documents, graphics and other resources? (y/n)\n-> ", false)) {
 			$config->set('documents.enabled', true);
 			$documents_root = $this->ask("Where do you store them?\n-> ");
 			$documents_root = rtrim(str_replace('\\', '/', $documents_root), '/');

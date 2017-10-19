@@ -1,8 +1,8 @@
 <?php
 
-namespace Afflicto\Webdev\Console;
+namespace Arakash\Webdev\Console;
 
-use Afflicto\Webdev\Webdev;
+use Arakash\Webdev\Webdev;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 

@@ -11,4 +11,4 @@ define('WEBDEV_VERSION', '0.4.1');
 define('WEBDEV_CONFIG_FILE', __DIR__ .'/config.php');
 define('WEBDEV_CONFIGURED', file_exists(WEBDEV_CONFIG_FILE));
 
-\Afflicto\Webdev\Webdev::getInstance()->run();
+\Arakash\Webdev\Webdev::getInstance()->run();

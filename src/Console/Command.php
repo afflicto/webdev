@@ -1,6 +1,6 @@
 <?php
 
-namespace Afflicto\Webdev\Console;
+namespace Arakash\Webdev\Console;
 
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;

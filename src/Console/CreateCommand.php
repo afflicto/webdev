@@ -1,8 +1,8 @@
 <?php
 
-namespace Afflicto\Webdev\Console;
+namespace Arakash\Webdev\Console;
 
-use Afflicto\Webdev\Webdev;
+use Arakash\Webdev\Webdev;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -83,6 +83,39 @@ class CreateCommand extends Command
 					$project['web']['virtualhost'] = $wd->createVirtualhostDirective($file, $name, $vhost_dir);
 				}
 			}
+
+			# is it apache?
+            if ($config->get('web.default') == 'apache') {
+			    if ($config->get('web.providers.apache.manage_sites')) {
+			        $paths = $config->get('web.providers.apache.paths');
+
+			        $availableFile = $paths['sites-available'] .'/80-' .$name .'.conf';
+			        $enabledFile = $paths['sites-enabled'] .'/80-' .$name .'.conf';
+
+			        # create the virtualhosts file
+                    $h = fopen($availableFile, 'w+');
+                    $str = "<VirtualHost *:80>\n\tServerName $name.dev";
+                    $str .= "\n\tDocumentRoot " .$project['web']['root'];
+                    $str .= "\n\n\t<Directory \"" .$project['web']['root'] ."\">";
+                    $str .= "\n\t\tOrder allow,deny";
+                    $str .= "\n\t\tAllow from 127.0.0.1";
+                    $str .= "\n\t\tRequire all granted";
+                    $str .= "\n\t</Directory>";
+                    $str .= "\n</VirtualHost>";
+
+			        fwrite($h, $str);
+			        fclose($h);
+
+			        # We could probably just run the 'a2ensite' apache command
+                    # but let's do it manually. Simply symlink the virtualhost
+                    # config file in sites_available to sites_enabled
+
+                    shell_exec('ln -sf ' .$availableFile .' ' .$enabledFile);
+
+                    # let's reload apache2
+                    $output->writeln(shell_exec($config->get('web.providers.apache.reloadCommand')));
+                }
+            }
 
 			# 'git init'?
 			if ($config->get('git')) {

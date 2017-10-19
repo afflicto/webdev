@@ -12,7 +12,8 @@ Imagine typing a single command like and having the following done in millisecon
 7.  Perhaps creates a folder for your non-code stuff `/home/John/Dropbox/Projects/new-site`.
 
 ## Changelog
-- Now generates virtualhost directives for WAMP.
+**October 19th, 2017**
+- Can now use `webdev config` to list entire config.
 
 [here's how it looks to both set it up and create your first site](http://g.recordit.co/iwrvlz7Hi1.gif)
 
@@ -25,7 +26,7 @@ Before you use it, remember that this tool is in alpha and isn't TDD'ed or anyth
 
 Grab it via packagist.org:
 ```bash
-composer global require "afflicto/webdev=dev-master"
+composer global require "arakash92/webdev=dev-master"
 ```
 
 The first time you run it, it should automatically do the `init` command, which is interactively sets up **webdev** in your particular environment.
