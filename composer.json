@@ -1,6 +1,6 @@
 {
     "name": "arakash92/webdev",
-    "description": "Command-line tool for managing your local web development projects on Windows with Wamp.",
+    "description": "Command-line tool for managing your local web development projects on Windows or Linux.",
     "type": "project",
     "require": {
         "php": "^5.4.0 || ^7.0",
