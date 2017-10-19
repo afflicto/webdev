@@ -1,5 +1,5 @@
 {
-    "name": "afflicto/webdev",
+    "name": "arakash92/webdev",
     "description": "Command-line tool for managing your local web development projects on Windows with Wamp.",
     "type": "project",
     "require": {
@@ -17,7 +17,7 @@
     "minimum-stability": "stable",
     "autoload": {
       "psr-4": {
-        "Afflicto\\Webdev\\": "src/"
+        "Arakash\\Webdev\\": "src/"
       }
     },
     "bin": [

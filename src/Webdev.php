@@ -1,11 +1,11 @@
 <?php
 
-namespace Afflicto\Webdev;
+namespace Arakash\Webdev;
 
-use Afflicto\Webdev\Console\AddCommand;
-use Afflicto\Webdev\Console\ConfigCommand;
-use Afflicto\Webdev\Console\CreateCommand;
-use Afflicto\Webdev\Console\InitCommand;
+use Arakash\Webdev\Console\AddCommand;
+use Arakash\Webdev\Console\ConfigCommand;
+use Arakash\Webdev\Console\CreateCommand;
+use Arakash\Webdev\Console\InitCommand;
 use Exception;
 use Illuminate\Config\Repository;
 use Symfony\Component\Console\Application;
@@ -13,7 +13,7 @@ use Symfony\Component\Console\Input\ArrayInput;
 
 /**
  * Singleton class for Webdev.
- * @package Afflicto
+ * @package Arakash
  */
 class Webdev
 {
